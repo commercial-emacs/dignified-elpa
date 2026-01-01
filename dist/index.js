@@ -28164,8 +28164,10 @@ async function nativeCompile(options) {
         ? loadPath.split(':').map(p => `(add-to-list 'load-path "${path.resolve(p)}")`).join('\n  ')
         : '';
     let compileCommand;
+    let needsWait = false;
     if (compileAll) {
         compileCommand = `(native-compile-async "${path.resolve(packageDir)}" 'recursively)`;
+        needsWait = true;
     }
     else if (packageFile) {
         compileCommand = `(native-compile "${path.resolve(packageFile)}")`;
@@ -28177,16 +28179,17 @@ async function nativeCompile(options) {
         }
         compileCommand = files.map(f => `(native-compile "${f}")`).join('\n  ');
     }
+    const waitLoop = needsWait ? `
+  (while (or comp-files-queue
+             (> (comp-async-runnings) 0))
+    (sleep-for 1))` : '';
     const emacsScript = `
 (progn
   (require 'comp)
   (setq native-comp-async-report-warnings-errors nil)
   (setq comp-async-report-warnings-errors nil)
   ${loadPathEntries}
-  ${compileCommand}
-  (while (or comp-files-queue
-             (> (comp-async-runnings) 0))
-    (sleep-for 1)))
+  ${compileCommand}${waitLoop})
 `;
     core.info('Starting native compilation...');
     await exec.exec('emacs', ['--batch', '--eval', emacsScript]);

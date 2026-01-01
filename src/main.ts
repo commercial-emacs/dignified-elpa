@@ -54,8 +54,11 @@ async function nativeCompile(options: CompileOptions): Promise<number> {
     : '';
 
   let compileCommand: string;
+  let needsWait = false;
+
   if (compileAll) {
     compileCommand = `(native-compile-async "${path.resolve(packageDir)}" 'recursively)`;
+    needsWait = true;
   } else if (packageFile) {
     compileCommand = `(native-compile "${path.resolve(packageFile)}")`;
   } else {
@@ -66,16 +69,18 @@ async function nativeCompile(options: CompileOptions): Promise<number> {
     compileCommand = files.map(f => `(native-compile "${f}")`).join('\n  ');
   }
 
+  const waitLoop = needsWait ? `
+  (while (or comp-files-queue
+             (> (comp-async-runnings) 0))
+    (sleep-for 1))` : '';
+
   const emacsScript = `
 (progn
   (require 'comp)
   (setq native-comp-async-report-warnings-errors nil)
   (setq comp-async-report-warnings-errors nil)
   ${loadPathEntries}
-  ${compileCommand}
-  (while (or comp-files-queue
-             (> (comp-async-runnings) 0))
-    (sleep-for 1)))
+  ${compileCommand}${waitLoop})
 `;
 
   core.info('Starting native compilation...');
