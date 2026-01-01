@@ -1,0 +1,13 @@
+name: Example Native Compilation
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  compile:
+    uses: ./.github/workflows/compile.yml
+    with:
+      package-file: 'my-package.el'
+      compile-all: false
+      install-deps: true

@@ -1,0 +1,35 @@
+name: 'Native Compile Elisp Package'
+description: 'Compile Elisp packages with native compilation'
+author: 'Your Name'
+
+branding:
+  icon: 'zap'
+  color: 'purple'
+
+inputs:
+  package-file:
+    description: 'Main package file to compile (e.g., "my-package.el")'
+    required: false
+  package-dir:
+    description: 'Directory containing .el files to compile'
+    required: false
+    default: '.'
+  compile-all:
+    description: 'Compile all .el files in directory recursively'
+    required: false
+    default: 'false'
+  load-path:
+    description: 'Additional directories to add to load-path (colon-separated)'
+    required: false
+  install-deps:
+    description: 'Install package dependencies first'
+    required: false
+    default: 'false'
+
+outputs:
+  eln-files:
+    description: 'Number of native compiled files generated'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
