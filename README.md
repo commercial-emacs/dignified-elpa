@@ -124,33 +124,7 @@ The workflow automatically uploads compiled `.eln` files as GitHub Actions artif
   - `eln-files-emacs-snapshot-ubuntu-latest`
   - `eln-files-emacs-snapshot-macos-latest`
 - **Contents**: All `.eln` files generated during compilation
-- **Access**: Download from the Actions tab in your repository
-
-### Downloading Artifacts
-
-End users can download the latest `.eln` files using the provided script:
-
-```bash
-curl -O https://raw.githubusercontent.com/your-username/elisp-native-compile-action/v1/download-eln.sh
-chmod +x download-eln.sh
-./download-eln.sh owner/repo 29.4 linux
-```
-
-Or directly:
-
-```bash
-bash <(curl -s https://raw.githubusercontent.com/your-username/elisp-native-compile-action/v1/download-eln.sh) owner/repo
-```
-
-Arguments:
-- `owner/repo`: GitHub repository (required)
-- `emacs-version`: Emacs version, e.g., `29.4` (default: 29.4)
-- `os`: Operating system: `linux` or `darwin` (default: auto-detect)
-
-For private repositories, set `GITHUB_TOKEN`:
-```bash
-GITHUB_TOKEN=ghp_xxx ./download-eln.sh owner/private-repo
-```
+- **Access**: Download from the Actions tab in your repository or via the GitHub API
 
 ## Development
 
