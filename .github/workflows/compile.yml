@@ -67,9 +67,12 @@ jobs:
       - name: Build distribution
         run: make dist
 
+      - name: Create tarball
+        run: tar -czf dist.tar.gz -C dist .
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ matrix.emacs-version }}
-          path: 'dist/*'
+          path: 'dist.tar.gz'
           if-no-files-found: error
