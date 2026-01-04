@@ -64,9 +64,12 @@ jobs:
           load-path: ${{ inputs.load-path }}
           install-deps: ${{ inputs.install-deps }}
 
-      - name: Upload .eln artifacts
+      - name: Build distribution
+        run: make dist
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: eln-files-emacs-${{ matrix.emacs-version }}-${{ matrix.os }}
-          path: '**/*.eln'
+          name: ${{ matrix.os }}-${{ matrix.emacs-version }}
+          path: 'dist/*'
           if-no-files-found: error
