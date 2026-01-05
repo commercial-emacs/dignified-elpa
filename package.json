@@ -1,5 +1,5 @@
 {
-  "name": "elisp-compile-action",
+  "name": "dignified-elpa",
   "version": "1.0.0",
   "description": "GitHub Action to compile Elisp packages across architectures",
   "main": "dist/index.js",
