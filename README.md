@@ -15,7 +15,7 @@ on:
 
 jobs:
   compile:
-    uses: your-username/elisp-native-compile-action/.github/workflows/compile.yml@v1
+    uses: commercial-emacs/elisp-native-compile-action/.github/workflows/compile.yml@v1
     with:
       package-file: 'my-package.el'
 ```

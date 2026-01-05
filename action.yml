@@ -1,6 +1,6 @@
 name: 'Native Compile Elisp Package'
 description: 'Compile Elisp packages with native compilation'
-author: 'Your Name'
+author: 'commercial-emacs'
 
 branding:
   icon: 'zap'

@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/elisp-native-compile-action.git"
+    "url": "git+https://github.com/commercial-emacs/elisp-native-compile-action.git"
   },
   "keywords": [
     "emacs",
@@ -21,7 +21,7 @@
     "native-compilation",
     "github-actions"
   ],
-  "author": "Your Name",
+  "author": "commercial-emacs",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.1",

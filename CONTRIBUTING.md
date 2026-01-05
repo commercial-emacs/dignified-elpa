@@ -38,7 +38,7 @@ node dist/index.js
 Create a test repository and reference your branch:
 
 ```yaml
-- uses: your-username/elisp-native-compile-action@your-branch
+- uses: commercial-emacs/elisp-native-compile-action@your-branch
   with:
     package-file: 'test.el'
 ```
