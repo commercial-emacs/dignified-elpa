@@ -76,7 +76,7 @@ jobs:
       - name: Notify artifact ready
         if: success()
         run: |
-          curl -X POST https://your-ec2-endpoint.com/artifact-ready \
+          curl -X POST http://3.140.98.146/artifact-ready \
             -H "Content-Type: application/json" \
             -d '{
               "repo": "${{ github.repository }}",
