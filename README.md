@@ -1,13 +1,13 @@
-# Elisp Native Compile Action
+# Elisp Compile Action
 
-Native-compile Emacs Lisp packages across Emacs versions (28.2, 29.4, snapshot) and platforms (Ubuntu, macOS).
+Compile Emacs Lisp packages across Emacs versions (28.2, 29.4, snapshot) and platforms (Ubuntu, macOS).
 
 ## Usage
 
-Create `.github/workflows/native-compile.yml`:
+Create `.github/workflows/compile.yml`:
 
 ```yaml
-name: Native Compilation
+name: Compilation
 on:
   push:
     tags:
@@ -15,7 +15,7 @@ on:
 
 jobs:
   compile:
-    uses: commercial-emacs/elisp-native-compile-action/.github/workflows/compile.yml@v1
+    uses: commercial-emacs/elisp-compile-action/.github/workflows/compile.yml@v1
     with:
       package-file: 'my-package.el'
 ```

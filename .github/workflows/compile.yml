@@ -1,4 +1,4 @@
-name: Native Compile Elisp
+name: Compile Elisp
 
 on:
   workflow_call:
@@ -55,7 +55,7 @@ jobs:
         with:
           version: ${{ matrix.emacs-version }}
 
-      - name: Native compile with Emacs ${{ matrix.emacs-version }}
+      - name: Compile with Emacs ${{ matrix.emacs-version }}
         uses: ./
         with:
           package-file: ${{ inputs.package-file }}

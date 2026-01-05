@@ -28191,7 +28191,7 @@ async function nativeCompile(options) {
   ${loadPathEntries}
   ${compileCommand}${waitLoop})
 `;
-    core.info('Starting native compilation...');
+    core.info('Starting compilation...');
     await exec.exec('emacs', ['--batch', '--eval', emacsScript]);
     const elnGlobber = await glob.create(`${packageDir}/**/*.eln`);
     const elnFiles = await elnGlobber.glob();
@@ -28201,10 +28201,10 @@ async function run() {
     try {
         const hasNativeComp = await checkNativeCompSupport();
         if (!hasNativeComp) {
-            core.setFailed('This Emacs build does not support native compilation');
+            core.setFailed('This Emacs build does not support compilation');
             return;
         }
-        core.info('✓ Native compilation available');
+        core.info('✓ Compilation available');
         const options = {
             packageFile: core.getInput('package-file'),
             packageDir: core.getInput('package-dir') || '.',
@@ -28217,7 +28217,7 @@ async function run() {
         }
         const elnCount = await nativeCompile(options);
         core.setOutput('eln-files', elnCount.toString());
-        core.info(`✓ Native compilation complete (${elnCount} .eln files generated)`);
+        core.info(`✓ Compilation complete (${elnCount} .eln files generated)`);
     }
     catch (error) {
         if (error instanceof Error) {

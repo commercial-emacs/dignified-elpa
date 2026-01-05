@@ -1,4 +1,4 @@
-name: Example Native Compilation
+name: Example Compilation
 on:
   push:
     tags:
