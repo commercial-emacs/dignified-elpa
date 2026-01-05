@@ -20,7 +20,7 @@ jobs:
       package-file: 'my-package.el'
 ```
 
-Runs `make dist` and uploads artifacts: `<os>-<version>`
+Runs `make dist` and uploads `dist/` as artifact: `<os>-<version>`
 
 ## Inputs
 
