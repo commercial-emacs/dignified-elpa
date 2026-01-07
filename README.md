@@ -1,6 +1,6 @@
 # Dignified Elpa
 
-Compile Emacs Lisp packages across Emacs versions (29.4, 30.2, snapshot) and platforms (Ubuntu, macOS).
+Compile Emacs Lisp packages across Emacs versions (29.4, 30.2, snapshot, snapshot-commercial) and platforms (Ubuntu, macOS).
 
 ## Usage
 
@@ -26,7 +26,7 @@ Runs `make dist` and uploads `dist/` as artifact: `<os>-<version>`
 
 | Input | Default |
 |-------|---------|
-| `emacs-versions` | `["29.4", "30.2", "snapshot"]` |
+| `emacs-versions` | `["29.4", "30.2", "snapshot", "snapshot-commercial"]` |
 | `os-matrix` | `["ubuntu-latest", "macos-latest"]` |
 | `package-file` | - |
 | `package-dir` | `.` |
