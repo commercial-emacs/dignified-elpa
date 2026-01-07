@@ -9,14 +9,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        emacs-version: ['29.4', 'snapshot']
+        emacs-version: ['29.4', '30.2', 'snapshot']
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: purcell/setup-emacs@master
+      - uses: dickmao/setup-emacs@master
         with:
           version: ${{ matrix.emacs-version }}
 
@@ -47,8 +47,8 @@ jobs:
 
       - name: Verify compilation
         run: |
-          if [ -z "$(find . -name '*.eln' 2>/dev/null)" ]; then
-            echo "No .eln files found"
+          if [ -z "$(find . -name '*.elc' 2>/dev/null)" ]; then
+            echo "No .elc files found"
             exit 1
           fi
-          echo "✓ Native compilation successful"
+          echo "✓ Byte compilation successful"

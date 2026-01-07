@@ -1,5 +1,5 @@
 name: 'Compile Elisp Package'
-description: 'Compile Elisp packages with native compilation'
+description: 'Compile Elisp packages with byte compilation'
 author: 'Commercial Emacs'
 
 branding:
@@ -27,8 +27,8 @@ inputs:
     default: 'false'
 
 outputs:
-  eln-files:
-    description: 'Number of native compiled files generated'
+  elc-files:
+    description: 'Number of byte compiled files generated'
 
 runs:
   using: 'node20'

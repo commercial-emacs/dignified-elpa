@@ -38,7 +38,7 @@ node dist/index.js
 Create a test repository and reference your branch:
 
 ```yaml
-- uses: commercial-emacs/elisp-compile-action@your-branch
+- uses: commercial-emacs/dignified-elpa@your-branch
   with:
     package-file: 'test.el'
 ```

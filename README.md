@@ -1,6 +1,6 @@
-# Elisp Compile Action
+# Dignified Elpa
 
-Compile Emacs Lisp packages across Emacs versions (28.2, 29.4, snapshot) and platforms (Ubuntu, macOS).
+Compile Emacs Lisp packages across Emacs versions (29.4, 30.2, snapshot) and platforms (Ubuntu, macOS).
 
 ## Usage
 
@@ -15,7 +15,7 @@ on:
 
 jobs:
   compile:
-    uses: commercial-emacs/elisp-compile-action/.github/workflows/compile.yml@v1
+    uses: commercial-emacs/dignified-elpa/.github/workflows/compile.yml@v1
     with:
       package-file: 'my-package.el'
 ```
@@ -26,7 +26,7 @@ Runs `make dist` and uploads `dist/` as artifact: `<os>-<version>`
 
 | Input | Default |
 |-------|---------|
-| `emacs-versions` | `["28.2", "29.4", "snapshot"]` |
+| `emacs-versions` | `["29.4", "30.2", "snapshot"]` |
 | `os-matrix` | `["ubuntu-latest", "macos-latest"]` |
 | `package-file` | - |
 | `package-dir` | `.` |

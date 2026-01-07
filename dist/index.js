@@ -28130,18 +28130,6 @@ const core = __importStar(__nccwpck_require__(7484));
 const exec = __importStar(__nccwpck_require__(5236));
 const glob = __importStar(__nccwpck_require__(7206));
 const path = __importStar(__nccwpck_require__(6928));
-async function checkNativeCompSupport() {
-    let output = '';
-    const exitCode = await exec.exec('emacs', [
-        '--batch',
-        '--eval', '(princ (if (fboundp \'native-comp-available-p) (native-comp-available-p) nil))'
-    ], {
-        listeners: {
-            stdout: (data) => { output += data.toString(); }
-        }
-    });
-    return exitCode === 0 && output.trim() === 't';
-}
 async function findElispFiles(dir) {
     const globber = await glob.create(`${dir}/**/*.el`);
     return await globber.glob();
@@ -28158,53 +28146,38 @@ async function installDependencies(packageFile) {
 `;
     await exec.exec('emacs', ['--batch', '--eval', installScript]);
 }
-async function nativeCompile(options) {
+async function byteCompile(options) {
     const { packageFile, packageDir, compileAll, loadPath } = options;
     const loadPathEntries = loadPath
         ? loadPath.split(':').map(p => `(add-to-list 'load-path "${path.resolve(p)}")`).join('\n  ')
         : '';
     let compileCommand;
-    let needsWait = false;
     if (compileAll) {
-        compileCommand = `(native-compile-async "${path.resolve(packageDir)}" 'recursively)`;
-        needsWait = true;
+        compileCommand = `(byte-recompile-directory "${path.resolve(packageDir)}" 0 t)`;
     }
     else if (packageFile) {
-        compileCommand = `(native-compile "${path.resolve(packageFile)}")`;
+        compileCommand = `(byte-compile-file "${path.resolve(packageFile)}")`;
     }
     else {
         const files = await findElispFiles(packageDir);
         if (files.length === 0) {
             throw new Error(`No .el files found in ${packageDir}`);
         }
-        compileCommand = files.map(f => `(native-compile "${f}")`).join('\n  ');
+        compileCommand = files.map(f => `(byte-compile-file "${f}")`).join('\n  ');
     }
-    const waitLoop = needsWait ? `
-  (while (or comp-files-queue
-             (> (comp-async-runnings) 0))
-    (sleep-for 1))` : '';
     const emacsScript = `
 (progn
-  (require 'comp)
-  (setq native-comp-async-report-warnings-errors nil)
-  (setq comp-async-report-warnings-errors nil)
   ${loadPathEntries}
-  ${compileCommand}${waitLoop})
+  ${compileCommand})
 `;
     core.info('Starting compilation...');
     await exec.exec('emacs', ['--batch', '--eval', emacsScript]);
-    const elnGlobber = await glob.create(`${packageDir}/**/*.eln`);
-    const elnFiles = await elnGlobber.glob();
-    return elnFiles.length;
+    const elcGlobber = await glob.create(`${packageDir}/**/*.elc`);
+    const elcFiles = await elcGlobber.glob();
+    return elcFiles.length;
 }
 async function run() {
     try {
-        const hasNativeComp = await checkNativeCompSupport();
-        if (!hasNativeComp) {
-            core.setFailed('This Emacs build does not support compilation');
-            return;
-        }
-        core.info('✓ Compilation available');
         const options = {
             packageFile: core.getInput('package-file'),
             packageDir: core.getInput('package-dir') || '.',
@@ -28215,9 +28188,9 @@ async function run() {
         if (options.installDeps && options.packageFile) {
             await installDependencies(options.packageFile);
         }
-        const elnCount = await nativeCompile(options);
-        core.setOutput('eln-files', elnCount.toString());
-        core.info(`✓ Compilation complete (${elnCount} .eln files generated)`);
+        const elcCount = await byteCompile(options);
+        core.setOutput('elc-files', elcCount.toString());
+        core.info(`✓ Compilation complete (${elcCount} .elc files generated)`);
     }
     catch (error) {
         if (error instanceof Error) {

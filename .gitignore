@@ -3,4 +3,4 @@ lib/
 __tests__/runner/*
 *.log
 .DS_Store
-*.eln
+*.elc

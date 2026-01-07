@@ -30,7 +30,7 @@ on:
         description: 'JSON array of Emacs versions to compile for (default: all supported versions)'
         required: false
         type: string
-        default: '["28.2", "29.4", "snapshot"]'
+        default: '["29.4", "30.2", "snapshot"]'
       os-matrix:
         description: 'JSON array of operating systems to compile on'
         required: false
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Emacs ${{ matrix.emacs-version }}
-        uses: purcell/setup-emacs@master
+        uses: dickmao/setup-emacs@master
         with:
           version: ${{ matrix.emacs-version }}
 

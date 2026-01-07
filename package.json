@@ -1,7 +1,7 @@
 {
   "name": "dignified-elpa",
   "version": "1.0.0",
-  "description": "GitHub Action to compile Elisp packages across architectures",
+  "description": "GitHub Action to byte compile Elisp packages across architectures",
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/main.ts -o dist --source-map --license licenses.txt",
