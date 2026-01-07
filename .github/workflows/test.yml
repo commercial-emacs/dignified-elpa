@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        emacs-version: ['29.4', '30.2', 'snapshot']
+        emacs-version: ['29.4', '30.2', 'snapshot', 'snapshot-commercial']
 
     runs-on: ${{ matrix.os }}
 
