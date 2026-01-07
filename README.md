@@ -27,7 +27,6 @@ Runs `make dist` and uploads `dist/` as artifact: `<os>-<version>`
 | `emacs-versions` | `["29.4", "30.2", "snapshot", "snapshot-commercial"]` |
 | `os-matrix` | `["ubuntu-latest", "macos-latest"]` |
 | `package-dir` | `.` |
-| `compile-all` | `false` |
 
 ## License
 

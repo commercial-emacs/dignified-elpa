@@ -8,13 +8,9 @@ branding:
 
 inputs:
   package-dir:
-    description: 'Directory containing .el files to compile'
+    description: 'Directory containing .el files to compile recursively'
     required: false
     default: '.'
-  compile-all:
-    description: 'Compile all .el files in directory recursively'
-    required: false
-    default: 'false'
   load-path:
     description: 'Additional directories to add to load-path (colon-separated)'
     required: false

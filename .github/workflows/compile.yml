@@ -4,15 +4,10 @@ on:
   workflow_call:
     inputs:
       package-dir:
-        description: 'Directory containing .el files to compile'
+        description: 'Directory containing .el files to compile recursively'
         required: false
         type: string
         default: '.'
-      compile-all:
-        description: 'Compile all .el files in directory recursively'
-        required: false
-        type: boolean
-        default: false
       load-path:
         description: 'Additional directories to add to load-path (colon-separated)'
         required: false
@@ -50,7 +45,6 @@ jobs:
         uses: ./
         with:
           package-dir: ${{ inputs.package-dir }}
-          compile-all: ${{ inputs.compile-all }}
           load-path: ${{ inputs.load-path }}
 
       - name: Build distribution

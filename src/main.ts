@@ -5,33 +5,17 @@ import * as path from 'path';
 
 interface CompileOptions {
   packageDir: string;
-  compileAll: boolean;
   loadPath?: string;
 }
 
-async function findElispFiles(dir: string): Promise<string[]> {
-  const globber = await glob.create(`${dir}/**/*.el`);
-  return await globber.glob();
-}
-
 async function byteCompile(options: CompileOptions): Promise<number> {
-  const { packageDir, compileAll, loadPath } = options;
+  const { packageDir, loadPath } = options;
 
   const loadPathEntries = loadPath
     ? loadPath.split(':').map(p => `(add-to-list 'load-path "${path.resolve(p)}")`).join('\n  ')
     : '';
 
-  let compileCommand: string;
-
-  if (compileAll) {
-    compileCommand = `(byte-recompile-directory "${path.resolve(packageDir)}" 0 t)`;
-  } else {
-    const files = await findElispFiles(packageDir);
-    if (files.length === 0) {
-      throw new Error(`No .el files found in ${packageDir}`);
-    }
-    compileCommand = files.map(f => `(byte-compile-file "${f}")`).join('\n  ');
-  }
+  const compileCommand = `(byte-recompile-directory "${path.resolve(packageDir)}" 0 t)`;
 
   const emacsScript = `
 (progn
@@ -52,7 +36,6 @@ async function run(): Promise<void> {
   try {
     const options: CompileOptions = {
       packageDir: core.getInput('package-dir') || '.',
-      compileAll: core.getInput('compile-all') === 'true',
       loadPath: core.getInput('load-path')
     };
 

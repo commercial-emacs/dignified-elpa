@@ -29,7 +29,6 @@ Set inputs via environment variables:
 
 ```bash
 export INPUT_PACKAGE-DIR="."
-export INPUT_COMPILE-ALL="false"
 node dist/index.js
 ```
 
