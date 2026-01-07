@@ -3,10 +3,6 @@ name: Compile Elisp
 on:
   workflow_call:
     inputs:
-      package-file:
-        description: 'Main package file to compile (e.g., "my-package.el")'
-        required: false
-        type: string
       package-dir:
         description: 'Directory containing .el files to compile'
         required: false
@@ -53,7 +49,6 @@ jobs:
       - name: Compile with Emacs ${{ matrix.emacs-version }}
         uses: ./
         with:
-          package-file: ${{ inputs.package-file }}
           package-dir: ${{ inputs.package-dir }}
           compile-all: ${{ inputs.compile-all }}
           load-path: ${{ inputs.load-path }}

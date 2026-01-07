@@ -28,7 +28,7 @@ node dist/index.js
 Set inputs via environment variables:
 
 ```bash
-export INPUT_PACKAGE-FILE="test.el"
+export INPUT_PACKAGE-DIR="."
 export INPUT_COMPILE-ALL="false"
 node dist/index.js
 ```
@@ -40,7 +40,7 @@ Create a test repository and reference your branch:
 ```yaml
 - uses: commercial-emacs/dignified-elpa@your-branch
   with:
-    package-file: 'test.el'
+    package-dir: '.'
 ```
 
 ## Release Process

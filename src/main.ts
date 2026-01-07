@@ -4,7 +4,6 @@ import * as glob from '@actions/glob';
 import * as path from 'path';
 
 interface CompileOptions {
-  packageFile?: string;
   packageDir: string;
   compileAll: boolean;
   loadPath?: string;
@@ -16,7 +15,7 @@ async function findElispFiles(dir: string): Promise<string[]> {
 }
 
 async function byteCompile(options: CompileOptions): Promise<number> {
-  const { packageFile, packageDir, compileAll, loadPath } = options;
+  const { packageDir, compileAll, loadPath } = options;
 
   const loadPathEntries = loadPath
     ? loadPath.split(':').map(p => `(add-to-list 'load-path "${path.resolve(p)}")`).join('\n  ')
@@ -26,8 +25,6 @@ async function byteCompile(options: CompileOptions): Promise<number> {
 
   if (compileAll) {
     compileCommand = `(byte-recompile-directory "${path.resolve(packageDir)}" 0 t)`;
-  } else if (packageFile) {
-    compileCommand = `(byte-compile-file "${path.resolve(packageFile)}")`;
   } else {
     const files = await findElispFiles(packageDir);
     if (files.length === 0) {
@@ -54,7 +51,6 @@ async function byteCompile(options: CompileOptions): Promise<number> {
 async function run(): Promise<void> {
   try {
     const options: CompileOptions = {
-      packageFile: core.getInput('package-file'),
       packageDir: core.getInput('package-dir') || '.',
       compileAll: core.getInput('compile-all') === 'true',
       loadPath: core.getInput('load-path')

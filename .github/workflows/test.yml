@@ -57,7 +57,7 @@ jobs:
       - name: Test action
         uses: ./
         with:
-          package-file: 'test-package.el'
+          package-dir: '.'
 
       - name: Verify compilation
         run: |

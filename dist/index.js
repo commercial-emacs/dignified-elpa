@@ -28135,16 +28135,13 @@ async function findElispFiles(dir) {
     return await globber.glob();
 }
 async function byteCompile(options) {
-    const { packageFile, packageDir, compileAll, loadPath } = options;
+    const { packageDir, compileAll, loadPath } = options;
     const loadPathEntries = loadPath
         ? loadPath.split(':').map(p => `(add-to-list 'load-path "${path.resolve(p)}")`).join('\n  ')
         : '';
     let compileCommand;
     if (compileAll) {
         compileCommand = `(byte-recompile-directory "${path.resolve(packageDir)}" 0 t)`;
-    }
-    else if (packageFile) {
-        compileCommand = `(byte-compile-file "${path.resolve(packageFile)}")`;
     }
     else {
         const files = await findElispFiles(packageDir);
@@ -28167,7 +28164,6 @@ async function byteCompile(options) {
 async function run() {
     try {
         const options = {
-            packageFile: core.getInput('package-file'),
             packageDir: core.getInput('package-dir') || '.',
             compileAll: core.getInput('compile-all') === 'true',
             loadPath: core.getInput('load-path')

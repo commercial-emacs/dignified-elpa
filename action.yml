@@ -7,9 +7,6 @@ branding:
   color: 'purple'
 
 inputs:
-  package-file:
-    description: 'Main package file to compile (e.g., "my-package.el")'
-    required: false
   package-dir:
     description: 'Directory containing .el files to compile'
     required: false
