@@ -19,6 +19,8 @@ jobs:
       - uses: dickmao/setup-emacs@dignified-elpa
         with:
           version: ${{ matrix.emacs-version }}
+          repository: dickmao/nix-emacs-ci
+          branch: dignified-elpa
 
       - name: Create test package
         run: |
