@@ -21,11 +21,6 @@ on:
         description: 'Additional directories to add to load-path (colon-separated)'
         required: false
         type: string
-      install-deps:
-        description: 'Install package dependencies first'
-        required: false
-        type: boolean
-        default: false
       emacs-versions:
         description: 'JSON array of Emacs versions to compile for (default: all supported versions)'
         required: false
@@ -62,7 +57,6 @@ jobs:
           package-dir: ${{ inputs.package-dir }}
           compile-all: ${{ inputs.compile-all }}
           load-path: ${{ inputs.load-path }}
-          install-deps: ${{ inputs.install-deps }}
 
       - name: Build distribution
         run: make dist

@@ -28134,18 +28134,6 @@ async function findElispFiles(dir) {
     const globber = await glob.create(`${dir}/**/*.el`);
     return await globber.glob();
 }
-async function installDependencies(packageFile) {
-    core.info('Installing package dependencies...');
-    const installScript = `
-(progn
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (package-refresh-contents)
-  (package-install-file "${packageFile}"))
-`;
-    await exec.exec('emacs', ['--batch', '--eval', installScript]);
-}
 async function byteCompile(options) {
     const { packageFile, packageDir, compileAll, loadPath } = options;
     const loadPathEntries = loadPath
@@ -28182,12 +28170,8 @@ async function run() {
             packageFile: core.getInput('package-file'),
             packageDir: core.getInput('package-dir') || '.',
             compileAll: core.getInput('compile-all') === 'true',
-            loadPath: core.getInput('load-path'),
-            installDeps: core.getInput('install-deps') === 'true'
+            loadPath: core.getInput('load-path')
         };
-        if (options.installDeps && options.packageFile) {
-            await installDependencies(options.packageFile);
-        }
         const elcCount = await byteCompile(options);
         core.setOutput('elc-files', elcCount.toString());
         core.info(`✓ Compilation complete (${elcCount} .elc files generated)`);

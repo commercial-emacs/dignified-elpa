@@ -1,7 +1,6 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as glob from '@actions/glob';
-import { promises as fs } from 'fs';
 import * as path from 'path';
 
 interface CompileOptions {
@@ -9,27 +8,11 @@ interface CompileOptions {
   packageDir: string;
   compileAll: boolean;
   loadPath?: string;
-  installDeps: boolean;
 }
 
 async function findElispFiles(dir: string): Promise<string[]> {
   const globber = await glob.create(`${dir}/**/*.el`);
   return await globber.glob();
-}
-
-async function installDependencies(packageFile: string): Promise<void> {
-  core.info('Installing package dependencies...');
-
-  const installScript = `
-(progn
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (package-refresh-contents)
-  (package-install-file "${packageFile}"))
-`;
-
-  await exec.exec('emacs', ['--batch', '--eval', installScript]);
 }
 
 async function byteCompile(options: CompileOptions): Promise<number> {
@@ -74,13 +57,8 @@ async function run(): Promise<void> {
       packageFile: core.getInput('package-file'),
       packageDir: core.getInput('package-dir') || '.',
       compileAll: core.getInput('compile-all') === 'true',
-      loadPath: core.getInput('load-path'),
-      installDeps: core.getInput('install-deps') === 'true'
+      loadPath: core.getInput('load-path')
     };
-
-    if (options.installDeps && options.packageFile) {
-      await installDependencies(options.packageFile);
-    }
 
     const elcCount = await byteCompile(options);
 

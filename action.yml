@@ -21,10 +21,6 @@ inputs:
   load-path:
     description: 'Additional directories to add to load-path (colon-separated)'
     required: false
-  install-deps:
-    description: 'Install package dependencies first'
-    required: false
-    default: 'false'
 
 outputs:
   elc-files:
