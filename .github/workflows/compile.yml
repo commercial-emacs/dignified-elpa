@@ -42,7 +42,7 @@ jobs:
           version: ${{ matrix.emacs-version }}
 
       - name: Compile with Emacs ${{ matrix.emacs-version }}
-        uses: commercial-emacs/dignified-elpa@${{ github.ref_name }}
+        uses: commercial-emacs/dignified-elpa@master
         with:
           package-dir: ${{ inputs.package-dir }}
           load-path: ${{ inputs.load-path }}
