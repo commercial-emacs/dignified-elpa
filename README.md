@@ -1,32 +1,53 @@
 # Dignified Elpa
 
-Compile Emacs Lisp packages across Emacs versions (29.4, 30.2, snapshot, snapshot-commercial) and platforms (Ubuntu, macOS).
+GitHub Action to byte-compile Emacs Lisp packages.
 
 ## Usage
 
-Create `.github/workflows/compile.yml`:
+Create `.github/workflows/release.yml`:
 
 ```yaml
-name: Compilation
+name: Release
 on:
   push:
-    tags:
-      - 'v*'
+    tags: ['v*']
 
 jobs:
-  compile:
-    uses: commercial-emacs/dignified-elpa/.github/workflows/compile.yml@v1
-```
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        emacs: ['29.4', '30.2', 'snapshot', 'snapshot-commercial']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
 
-Runs `make dist` and uploads `dist/` as artifact: `<os>-<version>`
+      # Install any dependencies your package needs
+      - uses: actions/setup-python@v5
+        if: false  # Enable if needed
+
+      - uses: dickmao/setup-emacs@dignified-elpa
+        with:
+          version: ${{ matrix.emacs }}
+
+      - uses: commercial-emacs/dignified-elpa@v1
+        with:
+          package-dir: '.'
+
+      - run: make dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-${{ matrix.emacs }}
+          path: dist/
+```
 
 ## Inputs
 
-| Input | Default |
-|-------|---------|
-| `emacs-versions` | `["29.4", "30.2", "snapshot", "snapshot-commercial"]` |
-| `os-matrix` | `["ubuntu-latest", "macos-latest"]` |
-| `package-dir` | `.` |
+| Input | Default | Description |
+|-------|---------|-------------|
+| `package-dir` | `.` | Directory containing .el files to compile recursively |
+| `load-path` | - | Additional directories to add to load-path (colon-separated) |
 
 ## License
 
