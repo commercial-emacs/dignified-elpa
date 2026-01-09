@@ -10,7 +10,7 @@ Create `.github/workflows/release.yml`:
 name: Release
 on:
   push:
-    tags: ['v*']
+    tags: ['*']
 
 jobs:
   build:
@@ -30,11 +30,11 @@ jobs:
         with:
           version: ${{ matrix.emacs }}
 
+      - run: make dist
+
       - uses: commercial-emacs/dignified-elpa@v1
         with:
           package-dir: '.'
-
-      - run: make dist
 
       - uses: actions/upload-artifact@v4
         with:
