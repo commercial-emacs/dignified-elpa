@@ -7,8 +7,7 @@ endif
 ELSRC := $(filter %.el,$(FILES))
 FILES := $(ELSRC) $(filter-out $(ELSRC),$(FILES))
 
-NAME_VERSION := $(shell $(EMACS) -batch -L . -l package-inception \
-  --eval "(princ (package-versioned-name \"$(firstword $(ELSRC))\"))")
+NAME_VERSION := $(shell $(EMACS) -batch -L . -l package-inception --eval "(princ (package-versioned-name \"$(firstword $(ELSRC))\"))")
 ifeq ($(NAME_VERSION),)
 $(error Failed to get package version from $(firstword $(ELSRC)))
 endif

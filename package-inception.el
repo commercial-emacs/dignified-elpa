@@ -3,11 +3,6 @@
 (require 'package)
 (require 'project)
 
-(defun package-versioned-name (main-file)
-  (let ((pkg-desc (package-desc main-file)))
-    (concat (package-desc-name pkg-desc)
-	    "-" (package-version-join (package-desc-version pkg-desc)))))
-
 (defsubst package-where ()
   (directory-file-name (expand-file-name (project-root (project-current)))))
 
@@ -16,6 +11,11 @@
     (insert-file-contents
      (expand-file-name main-file (package-where)))
     (package-buffer-info)))
+
+(defun package-versioned-name (main-file)
+  (let ((pkg-desc (package-desc main-file)))
+    (concat (symbol-name (package-desc-name pkg-desc))
+	    "-" (package-version-join (package-desc-version pkg-desc)))))
 
 (defun package-inception (main-file &rest other-files)
   "To get a -pkg.el file, you need to run `package-unpack'.
