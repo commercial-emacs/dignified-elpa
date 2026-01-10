@@ -1,0 +1,43 @@
+name: Build Distribution
+
+on:
+  workflow_call:
+    inputs:
+      files:
+        description: 'Space-separated list of files to include in distribution (e.g., "foo.el foo-pkg.el README.md")'
+        required: true
+        type: string
+      emacs-versions:
+        description: 'JSON array of Emacs versions to test'
+        required: false
+        type: string
+        default: '["29.4", "30.2", "snapshot", "snapshot-commercial"]'
+      os-matrix:
+        description: 'JSON array of operating systems to test'
+        required: false
+        type: string
+        default: '["ubuntu-latest", "macos-latest"]'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: ${{ fromJSON(inputs.os-matrix) }}
+        emacs-version: ${{ fromJSON(inputs.emacs-versions) }}
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dickmao/setup-emacs@dignified-elpa
+        with:
+          version: ${{ matrix.emacs-version }}
+
+      - name: Build distribution
+        run: make FILES="${{ inputs.files }}" dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-${{ matrix.emacs-version }}
+          path: '*.tar'

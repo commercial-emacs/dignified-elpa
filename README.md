@@ -37,24 +37,29 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        emacs: ['29.4', '30.2', 'snapshot', 'snapshot-commercial']
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
+    uses: commercial-emacs/dignified-elpa/.github/workflows/build.yml@v1
+    with:
+      files: "your-package.el your-package-pkg.el README.md"
+```
 
-      - uses: dickmao/setup-emacs@dignified-elpa
-        with:
-          version: ${{ matrix.emacs }}
+### Inputs
 
-      - run: make FILES="your-package.el ..." dist
+| Input | Default | Description |
+|-------|---------|-------------|
+| `files` | - | **Required.** Space-separated list of files to include in distribution |
+| `emacs-versions` | `["29.4", "30.2", "snapshot", "snapshot-commercial"]` | JSON array of Emacs versions |
+| `os-matrix` | `["ubuntu-latest", "macos-latest"]` | JSON array of operating systems |
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.os }}-${{ matrix.emacs }}
-          path: '*.tar'
+### Example with Custom Matrix
+
+```yaml
+jobs:
+  build:
+    uses: commercial-emacs/dignified-elpa/.github/workflows/build.yml@v1
+    with:
+      files: "foo.el foo-pkg.el"
+      emacs-versions: '["29.4", "30.2"]'
+      os-matrix: '["ubuntu-latest"]'
 ```
 
 ## Makefile Targets
