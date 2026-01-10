@@ -1,6 +1,6 @@
 # Dignified Elpa
 
-Reusable GitHub Actions workflow for building and distributing Emacs Lisp packages.
+Reusable GitHub Actions workflow and Makefile for building and distributing Emacs Lisp packages.
 
 ## Features
 
@@ -8,9 +8,29 @@ Reusable GitHub Actions workflow for building and distributing Emacs Lisp packag
 - Automatic package name and version extraction
 - Matrix testing across Emacs versions and OS platforms
 - Distribution tarball creation and upload
-- Zero boilerplate for consumers
+- Clean Makefile abstraction for local and CI builds
+
+## Setup
+
+1. Copy `Makefile` to your Elisp package repository
+2. Ensure you have `package-inception.el` available (the Makefile will download it)
 
 ## Usage
+
+### Local Usage
+
+```bash
+# Create distribution tarball
+make FILES="foo.el foo-pkg.el README.md" dist
+
+# Test byte compilation (compiles then removes .elc files)
+make FILES="foo.el foo-pkg.el" compile
+
+# Clean build artifacts
+make FILES="foo.el" dist-clean
+```
+
+### GitHub Actions
 
 Create `.github/workflows/release.yml`:
 
@@ -49,14 +69,13 @@ jobs:
 
 ## How It Works
 
-The workflow automatically:
-1. Downloads `package-inception.el` from the package-inception repository
-2. Filters your files list to separate `.el` files from other files
-3. Calls `package-inception` to create the package directory structure
-4. Creates a tarball of the generated package
-5. Uploads artifacts named `<os>-<emacs-version>.tar`
+The workflow uses the Makefile to:
+1. Extract package name and version from your .el files
+2. Call `package-inception` to create the package directory structure
+3. Create a tarball of the generated package
+4. Upload artifacts named `<os>-<emacs-version>.tar`
 
-No Makefile needed in your repository!
+The Makefile provides a clean abstraction that works both locally and in CI.
 
 ## License
 
