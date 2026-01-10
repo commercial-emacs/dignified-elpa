@@ -1,6 +1,6 @@
 # Dignified Elpa
 
-Reusable GitHub Actions workflow and Makefile for building and distributing Emacs Lisp packages.
+Reusable GitHub Actions workflow for building and distributing Emacs Lisp packages.
 
 ## Features
 
@@ -8,31 +8,11 @@ Reusable GitHub Actions workflow and Makefile for building and distributing Emac
 - Automatic package name and version extraction
 - Matrix testing across Emacs versions and OS platforms
 - Distribution tarball creation and upload
-- Clean Makefile abstraction for local and CI builds
-
-## Setup
-
-1. Copy `Makefile` to your Elisp package repository
-2. Ensure you have `package-inception.el` available (the Makefile will download it)
+- Zero setup required - no files to copy
 
 ## Usage
 
-### Local Usage
-
-```bash
-# Create distribution tarball
-make FILES="foo.el foo-pkg.el README.md" dist
-
-# Test byte compilation (compiles then removes .elc files)
-make FILES="foo.el foo-pkg.el" compile
-
-# Clean build artifacts
-make FILES="foo.el" dist-clean
-```
-
-### GitHub Actions
-
-Create `.github/workflows/release.yml`:
+Create `.github/workflows/release.yml` in your package repository:
 
 ```yaml
 name: Release
@@ -69,13 +49,16 @@ jobs:
 
 ## How It Works
 
-The workflow uses the Makefile to:
-1. Extract package name and version from your .el files
-2. Call `package-inception` to create the package directory structure
-3. Create a tarball of the generated package
-4. Upload artifacts named `<os>-<emacs-version>.tar`
+The workflow automatically:
+1. Checks out your package repository
+2. Checks out dignified-elpa repository (containing Makefile and package-inception.el)
+3. Runs the Makefile from dignified-elpa against your package files
+4. Extracts package name and version from your .el files
+5. Calls `package-inception` to create the package directory structure
+6. Creates a tarball of the generated package
+7. Uploads artifacts named `<os>-<emacs-version>.tar`
 
-The Makefile provides a clean abstraction that works both locally and in CI.
+All build infrastructure stays in dignified-elpa - nothing to copy or maintain in your repository.
 
 ## License
 
