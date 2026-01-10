@@ -43,7 +43,12 @@ define install-recipe
 	$(MAKE) dist-clean
 endef
 
+deps/archives/gnu/archive-contents: gnus-summarize.el
+	$(call install-recipe,$(CURDIR)/deps)
+	rm -rf deps/$(NAME)* # just keep deps
+
 .PHONY: compile
-compile:
-	$(EMACS) -batch -L . -f batch-byte-compile $(ELSRC); \
+compile: deps/archives/gnu/archive-contents
+	$(EMACS) -batch --eval "(setq package-user-dir (expand-file-name \"deps\"))" \
+	  -f package-initialize -L . -f batch-byte-compile $(ELSRC); \
 	  (ret=$$? ; rm -f $(ELSRC:.el=.elc) && exit $$ret)
