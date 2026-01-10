@@ -1,4 +1,3 @@
-export VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null || echo v1)
 SHELL := /bin/bash
 EMACS ?= emacs
 FILES =
@@ -53,10 +52,3 @@ compile: deps/archives/gnu/archive-contents
 	$(EMACS) -batch --eval "(setq package-user-dir (expand-file-name \"deps\"))" \
 	  -f package-initialize -L . -f batch-byte-compile $(ELSRC); \
 	  (ret=$$? ; rm -f $(ELSRC:.el=.elc) && exit $$ret)
-
-.PHONY: retag
-retag:
-	2>/dev/null git tag -d $(VERSION) || true
-	2>/dev/null git push --delete origin $(VERSION) || true
-	git tag $(VERSION)
-	git push origin $(VERSION)
