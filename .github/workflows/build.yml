@@ -34,8 +34,66 @@ jobs:
         with:
           version: ${{ matrix.emacs-version }}
 
+      - name: Download package-inception
+        run: |
+          curl -sL https://raw.githubusercontent.com/commercial-emacs/package-inception/main/package-inception.el -o package-inception.el
+
       - name: Build distribution
-        run: make FILES="${{ inputs.files }}" dist
+        run: |
+          set -e
+
+          FILES="${{ inputs.files }}"
+
+          # Extract .el files
+          ELSRC=""
+          for f in $FILES; do
+            if [[ "$f" == *.el ]]; then
+              ELSRC="$ELSRC $f"
+            fi
+          done
+          ELSRC="${ELSRC# }" # trim leading space
+
+          if [ -z "$ELSRC" ]; then
+            echo "Error: FILES must include at least one .el file"
+            exit 1
+          fi
+
+          # Get first .el file
+          FIRST_EL=$(echo $ELSRC | awk '{print $1}')
+
+          # Get versioned package name
+          NAME_VERSION=$(emacs -batch -L . -l package-inception \
+            --eval "(princ (package-versioned-name \"$FIRST_EL\"))")
+
+          if [ -z "$NAME_VERSION" ]; then
+            echo "Error: Failed to get package version from $FIRST_EL"
+            exit 1
+          fi
+
+          echo "Building package: $NAME_VERSION"
+
+          # Clean any existing artifacts
+          rm -rf "$NAME_VERSION" "$NAME_VERSION.tar"
+
+          # Build quoted file list for Emacs
+          FILE_LIST=""
+          for f in $ELSRC; do
+            FILE_LIST="$FILE_LIST \"$f\""
+          done
+          for f in $FILES; do
+            if [[ "$f" != *.el ]]; then
+              FILE_LIST="$FILE_LIST \"$f\""
+            fi
+          done
+
+          # Run package-inception
+          emacs -batch -L . -l package-inception \
+            --eval "(package-inception$FILE_LIST)"
+
+          # Create tarball
+          tar cf "$NAME_VERSION.tar" "$NAME_VERSION"
+
+          echo "Created: $NAME_VERSION.tar"
 
       - uses: actions/upload-artifact@v4
         with:
