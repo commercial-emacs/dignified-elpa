@@ -42,8 +42,11 @@ jobs:
           version: ${{ matrix.emacs-version }}
 
       - name: Build distribution
-        working-directory: package
-        run: make -f ../dignified-elpa/Makefile FILES="${{ inputs.files }}" dist
+        working-directory: dignified-elpa
+        run: |
+          for f in ${{ inputs.files }}; do cp ../package/"$f" .; done
+          make FILES="${{ inputs.files }}" dist
+          cp *.tar ../package/
 
       - uses: actions/upload-artifact@v4
         with:
