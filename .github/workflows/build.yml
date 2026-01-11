@@ -42,9 +42,8 @@ jobs:
           version: ${{ matrix.emacs-version }}
 
       - name: Build distribution
-        working-directory: package
         run: |
-          make -f ${{ github.workspace }}/dignified-elpa/Makefile -C package FILES="${{ inputs.files }}" install
+          make -f ${{ github.workspace }}/dignified-elpa/Makefile -C ${{ github.workspace }}/package FILES="${{ inputs.files }}" install
 
       - uses: actions/upload-artifact@v4
         with:
