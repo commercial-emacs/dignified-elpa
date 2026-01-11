@@ -4,6 +4,7 @@
 (require 'project)
 
 (defsubst package-where ()
+  (make-directory (file-name-directory project-list-file) t)
   (directory-file-name (expand-file-name (project-root (project-current)))))
 
 (defsubst package-desc (main-file)
