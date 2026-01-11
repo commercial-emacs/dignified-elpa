@@ -29,8 +29,10 @@ dist: dist-clean
 .PHONY: install
 install:
 	$(MAKE) -f $(MAKEFILE) dist
-	$(EMACS) --batch -l package --eval "(setq package-user-dir (expand-file-name \"install\"))" \
-	  -f package-initialize -f package-refresh-contents \
+	$(EMACS) --batch -l package \
+	  --eval "(setq package-user-dir (expand-file-name \"install\"))" \
+	  --eval "(package-initialize)" \
+	  --eval "(package-refresh-contents nil)" \
 	  --eval "(package-install-file \"$(NAME_VERSION).tar\")"
 	if [ -f "install/$(NAME_VERSION)/Makefile" ]; then \
 	  GIT_DIR=`git rev-parse --show-toplevel`/.git $(MAKE) -C install/$(NAME_VERSION); \
