@@ -30,13 +30,11 @@ dist: dist-clean
 install:
 	$(MAKE) -f $(MAKEFILE) dist
 	$(EMACS) --batch -l package --eval "(setq package-user-dir (expand-file-name \"install\"))" \
-	  -f package-initialize \
-	  --eval "(ignore-errors (apply (function package-delete) (alist-get (quote $(NAME)) package-alist)))" \
-	  -f package-refresh-contents \
+	  -f package-initialize -f package-refresh-contents \
 	  --eval "(package-install-file \"$(NAME_VERSION).tar\")"
-	cd install/$(NAME_VERSION) ; rm -f $(ELSRC)
 	if [ -f "install/$(NAME_VERSION)/Makefile" ]; then \
 	  GIT_DIR=`git rev-parse --show-toplevel`/.git $(MAKE) -C install/$(NAME_VERSION); \
 	fi
+	cd install/$(NAME_VERSION) ; rm -f $(ELSRC)
 	tar cf install/$(NAME_VERSION).tar install/$(NAME_VERSION)
 	$(MAKE) -f $(MAKEFILE) dist-clean
