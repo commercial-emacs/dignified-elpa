@@ -31,6 +31,7 @@ install:
 	$(MAKE) -f $(MAKEFILE) dist
 	$(EMACS) --batch -l package \
 	  --eval "(setq package-user-dir (expand-file-name \"install\"))" \
+	  --eval "(setq package-check-signature nil)" \
 	  --eval "(package-initialize)" \
 	  --eval "(package-refresh-contents nil)" \
 	  --eval "(package-install-file \"$(NAME_VERSION).tar\")"
