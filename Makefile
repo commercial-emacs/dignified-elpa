@@ -39,5 +39,5 @@ install:
 	  GIT_DIR=`git rev-parse --show-toplevel`/.git $(MAKE) -C install/$(NAME_VERSION); \
 	fi
 	cd install/$(NAME_VERSION) ; for f in $(ELSRC); do mv "$$f" ".$$f"; done
-	tar cf install/$(NAME_VERSION).tar install/$(NAME_VERSION)
+	tar -C install -cf install/$(NAME_VERSION).tar $(NAME_VERSION)
 	$(MAKE) -f $(MAKEFILE) dist-clean
