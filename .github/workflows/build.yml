@@ -49,3 +49,15 @@ jobs:
         with:
           name: ${{ matrix.os }}-${{ matrix.emacs-version }}
           path: package/install/*.tar
+
+      - name: Notify artifact ready
+        if: success()
+        run: |
+          curl -X POST https://commandlinesystems.com/api/artifact-ready \
+            -H "Content-Type: application/json" \
+            -d '{
+              "repo": "${{ github.repository }}",
+              "run_id": "${{ github.run_id }}",
+              "artifact": "${{ matrix.os }}-${{ matrix.emacs-version }}",
+              "tag": "${{ github.ref_name }}"
+            }'
