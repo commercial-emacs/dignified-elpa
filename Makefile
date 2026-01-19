@@ -2,10 +2,10 @@ SHELL := /bin/bash
 EMACS ?= emacs
 FILES =
 ifeq ($(FILES),)
-$(error FILES must be specified, e.g., make FILES="foo.el foo-bar.el" dist)
+$(error FILES must be specified, e.g., make FILES="README foo.el" dist)
 endif
 ELSRC := $(filter %.el,$(FILES))
-FILES := $(ELSRC) $(filter-out $(ELSRC),$(FILES))
+override FILES := $(ELSRC) $(filter-out $(ELSRC),$(FILES))
 # The readme set used by package--get-description
 README_SET := README-elpa README-elpa.md README README.rst README.org
 README_FILES := $(filter $(README_SET),$(FILES))
