@@ -41,9 +41,6 @@ install:
 	  --eval "(package-initialize)" \
 	  --eval "(package-refresh-contents nil)" \
 	  --eval "(package-install-file \"$(NAME_VERSION).tar\")"
-	if [ -f "install/$(NAME_VERSION)/Makefile" ]; then \
-	  GIT_DIR=`git rev-parse --show-toplevel`/.git $(MAKE) -C install/$(NAME_VERSION); \
-	fi
 	cd install/$(NAME_VERSION) ; for f in $(ELSRC); do mv "$$f" ".$$f"; done
 	tar -C install -cf install/$(NAME_VERSION).tar $(NAME_VERSION)
 	$(MAKE) -f $(MAKEFILE) dist-clean
