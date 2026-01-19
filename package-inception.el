@@ -28,5 +28,5 @@ To run `package-unpack', you need a -pkg.el."
     (make-directory pkg-dir t)
     (dolist (f (cons main-file other-files))
       (copy-file (expand-file-name f (package-where))
-		 (expand-file-name f pkg-dir)))
+		 (expand-file-name (file-name-nondirectory f) pkg-dir)))
     (package--make-autoloads-and-stuff (package-desc main-file) pkg-dir)))
