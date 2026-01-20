@@ -41,6 +41,7 @@ install:
 	  --eval "(package-initialize)" \
 	  --eval "(package-refresh-contents nil)" \
 	  --eval "(package-install-file \"$(NAME_VERSION).tar\")"
+	# cp dignified-elpa.el install/$(NAME_VERSION)
 	cd install/$(NAME_VERSION) ; for f in $(ELSRC); do mv "$$f" ".$$f"; done
 	tar -C install -cf install/$(NAME_VERSION).tar $(NAME_VERSION)
 	$(MAKE) -f $(MAKEFILE) dist-clean

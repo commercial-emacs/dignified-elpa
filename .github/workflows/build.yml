@@ -61,3 +61,17 @@ jobs:
               "artifact": "${{ matrix.os }}-${{ matrix.emacs-version }}",
               "tag": "${{ github.ref_name }}"
             }'
+
+  post-build:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract README
+        run: |
+          curl -X POST https://commandlinesystems.com/api/extract-readme \
+            -H "Content-Type: application/json" \
+            -d '{
+              "repo": "${{ github.repository }}",
+              "run_id": "${{ github.run_id }}",
+              "artifact": "ubuntu-latest-29.4"
+            }'
