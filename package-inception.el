@@ -29,4 +29,15 @@ To run `package-unpack', you need a -pkg.el."
     (dolist (f (cons main-file other-files))
       (copy-file (expand-file-name f (package-where))
 		 (expand-file-name (file-name-nondirectory f) pkg-dir)))
-    (package--make-autoloads-and-stuff (package-desc main-file) pkg-dir)))
+    (package--make-autoloads-and-stuff (package-desc main-file) pkg-dir)
+    (let ((autoloads-file (expand-file-name
+			   (format "%s-autoloads.el"
+				   (package-desc-name (package-desc main-file)))
+			   pkg-dir)))
+      (with-temp-buffer
+	(insert-file-contents autoloads-file)
+	(goto-char (point-max))
+	(search-backward "(provide")
+	(beginning-of-line)
+	(insert "\n;; Added by dignified-elpa\n(defun dignify ()\n  (interactive))\n\n")
+	(write-region (point-min) (point-max) autoloads-file)))))
