@@ -23,21 +23,21 @@
 To run `package-unpack', you need a -pkg.el."
   (let* ((pkg-dir (expand-file-name
 		   (package-versioned-name main-file)
-		   (package-where))))
+		   (package-where)))
+	 (pkg-desc (package-desc main-file))
+	 (pkg-name (package-desc-name pkg-desc)))
     (ignore-errors (delete-directory pkg-dir t))
     (make-directory pkg-dir t)
     (dolist (f (cons main-file other-files))
       (copy-file (expand-file-name f (package-where))
 		 (expand-file-name (file-name-nondirectory f) pkg-dir)))
-    (package--make-autoloads-and-stuff (package-desc main-file) pkg-dir)
+    (package--make-autoloads-and-stuff pkg-desc pkg-dir)
     (let ((autoloads-file (expand-file-name
-			   (format "%s-autoloads.el"
-				   (package-desc-name (package-desc main-file)))
+			   (format "%s-autoloads.el" pkg-name)
 			   pkg-dir)))
       (with-temp-buffer
 	(insert-file-contents autoloads-file)
 	(goto-char (point-max))
 	(search-backward "(provide")
 	(beginning-of-line)
-	(insert "\n;; Added by dignified-elpa\n(defun dignify ()\n  (interactive))\n\n")
 	(write-region (point-min) (point-max) autoloads-file)))))
