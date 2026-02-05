@@ -24,7 +24,7 @@ jobs:
   build:
     uses: commercial-emacs/dignified-elpa/.github/workflows/build.yml@v1
     with:
-      files: "your-package.el your-package-pkg.el README.md"
+      files: "your-package.el your-package-pkg.el README"
 ```
 
 ### Inputs
