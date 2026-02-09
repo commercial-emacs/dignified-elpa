@@ -6,12 +6,6 @@ $(error FILES must be specified, e.g., make FILES="README foo.el" dist)
 endif
 ELSRC := $(filter %.el,$(FILES))
 override FILES := $(ELSRC) $(filter-out $(ELSRC),$(FILES))
-# The readme set used by package--get-description
-README_SET := README-elpa README-elpa.md README README.rst README.org
-README_FILES := $(filter $(README_SET),$(FILES))
-ifeq ($(README_FILES),)
-$(error FILES must include one of: $(README_SET))
-endif
 MAKEFILE := $(abspath $(lastword $(MAKEFILE_LIST)))
 INCEPTION := -L $(dir $(MAKEFILE)) -l package-inception
 
