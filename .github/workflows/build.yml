@@ -68,7 +68,7 @@ jobs:
     steps:
       - name: Extract README
         run: |
-          curl -X POST https://commandlinesystems.com/api/extract-readme \
+          curl -f -X POST https://commandlinesystems.com/api/extract-readme \
             -H "Content-Type: application/json" \
             -d '{
               "repo": "${{ github.repository }}",
