@@ -3,29 +3,39 @@ EMACS ?= emacs
 FILES =
 EXCLUDE =
 ifeq ($(FILES),)
-$(error FILES must be specified, e.g., make FILES="README foo.el" dist)
+$(error FILES must be specified, e.g., make FILES="README foo*.el" dist)
 endif
-FILES := $(foreach f,$(FILES),$(or $(wildcard $f),$f))
-FILES := $(filter-out $(EXCLUDE),$(FILES))
-ELSRC := $(filter %.el,$(FILES))
+
+# FILES cannot be reassigned without clumsy `override`.  Use FILEZ.
+FILEZ := $(shell ls -d $(FILES) 2>/dev/null)
+FILEZ := $(filter-out $(EXCLUDE),$(FILEZ))
+ELSRC := $(filter %.el,$(FILEZ))
 ifeq ($(ELSRC),)
 $(error No .el files found in FILES)
 endif
-override FILES := $(ELSRC) $(filter-out $(ELSRC),$(FILES))
+FILEZ := $(ELSRC) $(filter-out $(ELSRC),$(FILEZ))
 MAKEFILE := $(abspath $(lastword $(MAKEFILE_LIST)))
 INCEPTION := -L $(dir $(MAKEFILE)) -l package-inception
 
-NAME_VERSION := $(shell \
+MAIN_FILE := $(shell \
 	for f in $(ELSRC); do \
-		result=$$($(EMACS) -batch $(INCEPTION) --eval "(princ (package-versioned-name \"$$f\"))" 2>/dev/null); \
-		if [ -n "$$result" ]; then echo "$$result"; exit 0; fi; \
+		if $(EMACS) -batch -l package --visit $$f -f package-buffer-info >/dev/null 2>&1 ; then\
+			echo "$$f";\
+			exit 0;\
+		fi; \
 	done; \
-	exit 1)
-ifeq ($(NAME_VERSION),)
+	)
+
+ifeq ($(MAIN_FILE),)
 $(error No elisp file contains valid package headers)
 endif
 
-NAME := $(shell NAME_VERSION='$(NAME_VERSION)'; echo "$${NAME_VERSION%-*}")
+FILEZ := $(MAIN_FILE) $(filter-out $(MAIN_FILE),$(FILEZ))
+
+NAME_VERSION := $(shell 2>/dev/null $(EMACS) -batch $(INCEPTION) --eval "(princ (package-versioned-name \"$(MAIN_FILE)\"))")
+ifeq ($(NAME_VERSION),)
+$(error package-versioned-name failed on $(MAIN_FILE))
+endif
 
 .PHONY: dist-clean
 dist-clean:
@@ -34,7 +44,7 @@ dist-clean:
 .PHONY: dist
 dist: dist-clean
 	$(EMACS) -batch $(INCEPTION) \
-	  --eval "(package-inception $(patsubst %,\"%\",$(FILES)))"
+	  --eval "(package-inception $(patsubst %,\"%\",$(FILEZ)))"
 	tar cf $(NAME_VERSION).tar $(NAME_VERSION)
 
 .PHONY: install
