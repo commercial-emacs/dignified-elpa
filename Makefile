@@ -10,8 +10,8 @@ MAKEFILE := $(abspath $(lastword $(MAKEFILE_LIST)))
 INCEPTION := -L $(dir $(MAKEFILE)) -l package-inception
 
 NAME_VERSION := $(shell $(EMACS) -batch $(INCEPTION) --eval "(princ (package-versioned-name \"$(firstword $(ELSRC))\"))")
-ifeq ($(NAME_VERSION),)
-$(error Failed to get package version from $(firstword $(ELSRC)))
+ifneq ($(.SHELLSTATUS),0)
+$(error First elisp file must contain package headers)
 endif
 
 NAME := $(shell NAME_VERSION='$(NAME_VERSION)'; echo "$${NAME_VERSION%-*}")
