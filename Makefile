@@ -1,17 +1,25 @@
 SHELL := /bin/bash
 EMACS ?= emacs
 FILES =
+EXCLUDE =
 ifeq ($(FILES),)
 $(error FILES must be specified, e.g., make FILES="README foo.el" dist)
 endif
+FILES := $(foreach f,$(FILES),$(or $(wildcard $f),$f))
+FILES := $(filter-out $(EXCLUDE),$(FILES))
 ELSRC := $(filter %.el,$(FILES))
 override FILES := $(ELSRC) $(filter-out $(ELSRC),$(FILES))
 MAKEFILE := $(abspath $(lastword $(MAKEFILE_LIST)))
 INCEPTION := -L $(dir $(MAKEFILE)) -l package-inception
 
-NAME_VERSION := $(shell $(EMACS) -batch $(INCEPTION) --eval "(princ (package-versioned-name \"$(firstword $(ELSRC))\"))" || { echo "ERROR" >&2; exit 1; })
+NAME_VERSION := $(shell \
+	for f in $(ELSRC); do \
+		result=$$($(EMACS) -batch $(INCEPTION) --eval "(princ (package-versioned-name \"$$f\"))" 2>/dev/null); \
+		if [ -n "$$result" ]; then echo "$$result"; exit 0; fi; \
+	done; \
+	exit 1)
 ifeq ($(NAME_VERSION),)
-$(error First elisp file must contain package headers)
+$(error No elisp file contains valid package headers)
 endif
 
 NAME := $(shell NAME_VERSION='$(NAME_VERSION)'; echo "$${NAME_VERSION%-*}")

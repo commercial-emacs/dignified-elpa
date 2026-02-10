@@ -4,8 +4,12 @@ on:
   workflow_call:
     inputs:
       files:
-        description: 'Space-separated list of files to include in distribution (e.g., "foo.el foo-pkg.el README.md")'
+        description: 'Space-separated files and fileglobs for inclusion (e.g., "foo*.el README.md")'
         required: true
+        type: string
+      exclude:
+        description: 'Space-separated files to exclude from fileglobs'
+        required: false
         type: string
       emacs-versions:
         description: 'JSON array of Emacs versions to test'
@@ -43,7 +47,7 @@ jobs:
 
       - name: Build distribution
         run: |
-          make -f ${{ github.workspace }}/dignified-elpa/Makefile -C ${{ github.workspace }}/package FILES="${{ inputs.files }}" install
+          make -f ${{ github.workspace }}/dignified-elpa/Makefile -C ${{ github.workspace }}/package FILES="${{ inputs.files }}" EXCLUDE="${{ inputs.exclude }}" install
 
       - uses: actions/upload-artifact@v4
         with:
