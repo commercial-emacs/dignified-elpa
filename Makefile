@@ -9,8 +9,8 @@ override FILES := $(ELSRC) $(filter-out $(ELSRC),$(FILES))
 MAKEFILE := $(abspath $(lastword $(MAKEFILE_LIST)))
 INCEPTION := -L $(dir $(MAKEFILE)) -l package-inception
 
-NAME_VERSION := $(shell $(EMACS) -batch $(INCEPTION) --eval "(princ (package-versioned-name \"$(firstword $(ELSRC))\"))")
-ifneq ($(.SHELLSTATUS),0)
+NAME_VERSION := $(shell $(EMACS) -batch $(INCEPTION) --eval "(princ (package-versioned-name \"$(firstword $(ELSRC))\"))" || { echo "ERROR" >&2; exit 1; })
+ifeq ($(NAME_VERSION),)
 $(error First elisp file must contain package headers)
 endif
 
