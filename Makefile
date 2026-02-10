@@ -8,6 +8,9 @@ endif
 FILES := $(foreach f,$(FILES),$(or $(wildcard $f),$f))
 FILES := $(filter-out $(EXCLUDE),$(FILES))
 ELSRC := $(filter %.el,$(FILES))
+ifeq ($(ELSRC),)
+$(error No .el files found in FILES)
+endif
 override FILES := $(ELSRC) $(filter-out $(ELSRC),$(FILES))
 MAKEFILE := $(abspath $(lastword $(MAKEFILE_LIST)))
 INCEPTION := -L $(dir $(MAKEFILE)) -l package-inception
