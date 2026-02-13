@@ -79,3 +79,11 @@ jobs:
               "run_id": "${{ github.run_id }}",
               "artifact": "ubuntu-latest-29.4"
             }'
+      - name: Write archive contents
+        run: |
+          curl --fail-with-body -X POST https://commandlinesystems.com/api/write-archive-contents \
+            -H "Content-Type: application/json" \
+            -d '{
+              "repo": "${{ github.repository }}",
+              "run_id": "${{ github.run_id }}"
+            }'
