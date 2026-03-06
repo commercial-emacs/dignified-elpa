@@ -13,9 +13,13 @@
      (expand-file-name main-file (package-where)))
     (package-buffer-info)))
 
+(defun package-name (main-file)
+  (let ((pkg-desc (package-desc main-file)))
+    (symbol-name (package-desc-name pkg-desc))))
+
 (defun package-versioned-name (main-file)
   (let ((pkg-desc (package-desc main-file)))
-    (concat (symbol-name (package-desc-name pkg-desc))
+    (concat (package-name main-file)
 	    "-" (package-version-join (package-desc-version pkg-desc)))))
 
 (defun package-inception (main-file &rest other-files)

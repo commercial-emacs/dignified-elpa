@@ -32,6 +32,7 @@ endif
 
 FILEZ := $(MAIN_FILE) $(filter-out $(MAIN_FILE),$(FILEZ))
 
+NAME := $(shell 2>/dev/null $(EMACS) -batch $(INCEPTION) --eval "(princ (package-name \"$(MAIN_FILE)\"))")
 NAME_VERSION := $(shell 2>/dev/null $(EMACS) -batch $(INCEPTION) --eval "(princ (package-versioned-name \"$(MAIN_FILE)\"))")
 ifeq ($(NAME_VERSION),)
 $(error package-versioned-name failed on $(MAIN_FILE))
@@ -55,6 +56,7 @@ install:
 	  --eval "(setq package-check-signature nil)" \
 	  --eval "(package-initialize)" \
 	  --eval "(package-refresh-contents nil)" \
+	  --eval "(ignore-errors (apply (function package-delete) (alist-get (quote $(NAME)) package-alist)))" \
 	  --eval "(package-install-file \"$(NAME_VERSION).tar\")"
 	# cp dignified-elpa.el install/$(NAME_VERSION)
 	cd install/$(NAME_VERSION) ; for f in $(ELSRC); do b=$$(basename "$$f"); mv "$$b" ".$$b"; done
